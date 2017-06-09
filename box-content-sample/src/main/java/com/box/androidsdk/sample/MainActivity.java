@@ -1,19 +1,30 @@
 package com.box.androidsdk.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.box.androidsdk.content.auth.BoxAuthentication;
 
 /**
  * Sample content app that demonstrates session creation, and use of file api.
  */
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
     private TaskHolder mTaskHolder;
+
+    @Override
+    public void onClick(final View view) {
+        switch (view.getId()) {
+            case R.id.start_second_activity:
+                startActivity(new Intent(this, SecondActivity.class));
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -22,10 +33,11 @@ public class MainActivity extends ActionBarActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         mTaskHolder = (TaskHolder) fragmentManager.findFragmentByTag(TaskHolder.FRAGMENT_TAG);
         if (mTaskHolder == null) {
-            fragmentManager.beginTransaction().add(mTaskHolder = new TaskHolder(),
+            fragmentManager.beginTransaction().add(mTaskHolder = TaskHolder.newInstance(getClass().getSimpleName()),
                                                    TaskHolder.FRAGMENT_TAG
             ).commit();
         }
+        findViewById(R.id.start_second_activity).setOnClickListener(this);
     }
 
     @Override

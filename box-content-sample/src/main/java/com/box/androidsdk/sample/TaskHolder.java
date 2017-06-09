@@ -27,18 +27,30 @@ public class TaskHolder extends Fragment implements BoxAuthentication.AuthListen
 
     private static final String TAG = "TaskHolder";
     public static final String FRAGMENT_TAG = "TaskHolder";
+    public static final String ACTIVITY_NAME = "activityName";
 
     BoxSession mSession = null;
     BoxSession mOldSession = null;
 
     private BoxApiFolder mFolderApi;
     private BoxApiFile mFileApi;
+    private String mActivityName;
+
+    public static TaskHolder newInstance(String activityName) {
+        Log.d(TAG, "activityName=" + activityName);
+        Bundle args = new Bundle();
+        args.putString(ACTIVITY_NAME, activityName);
+        TaskHolder fragment = new TaskHolder();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        Log.d(TAG, "onCreate");
+        mActivityName = getArguments().getString(ACTIVITY_NAME);
+        Log.d(TAG, "onCreate mActivityName=" + mActivityName);
         BoxConfig.IS_LOG_ENABLED = true;
         configureClient();
         initSession();
@@ -64,6 +76,7 @@ public class TaskHolder extends Fragment implements BoxAuthentication.AuthListen
         mSession = new BoxSession(MyApp.getContext());
         mSession.setSessionAuthListener(this);
         mSession.authenticate(MyApp.getContext());
+        Log.d(TAG, "initSession mActivityName=" + mActivityName);
     }
 
     @Override
@@ -95,7 +108,7 @@ public class TaskHolder extends Fragment implements BoxAuthentication.AuthListen
     @Override
     public void onLoggedOut(
             final BoxAuthentication.BoxAuthenticationInfo info, final Exception ex) {
-        Log.d(TAG, "onLoggedOut");
+        Log.d(TAG, "onLoggedOut mActivityName=" + mActivityName);
     }
 
     public void switchAccounts() {
